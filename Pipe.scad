@@ -2,12 +2,11 @@
 /*
  * PVC pipes
  */
-use <./Lib/ISOThread.scad>;
 use <Bearings.scad>;
 
 PIPE_HOLDER_WIDTH = 5;
-PVC_PIPE_DIAMETER = 32;
-THREADED_ROD_DIAMETER = 4; // M4
+function PVC_PIPE_DIAMETER() = 32;
+function THREADED_ROD_DIAMETER() = 4; // M4
 
 module Pipe( dia=10, w=1, len=100) {
 	difference() {
@@ -25,22 +24,29 @@ module Pipe32(len = 100) {
 module PipeHolder(h=40, w=50) {
     difference() {
         cube([PIPE_HOLDER_WIDTH,w,h], center=true);
-        rotate([0,90,0])
-            cylinder(d = BearingMR105ZZDiameter(), h = PIPE_HOLDER_WIDTH+1, center = true);
-        rotate([0,90,0])
-            Pipe32(len=PIPE_HOLDER_WIDTH);
-        for(i=[0,120,240]) {
-            rotate([i,0,0]) 
-                translate([-1,0,(PVC_PIPE_DIAMETER/3)])
-                    rotate([0,90,0]) translate([0,0,-(PIPE_HOLDER_WIDTH/2)])
-                        union() {
-                            cylinder(h=10,d=THREADED_ROD_DIAMETER+0.2, $fn =16);
-                            hex_nut(4);
-                        }
-        }
+        PipeHolderMinus(w=PIPE_HOLDER_WIDTH);
     }
     rotate([0,90,0])
         BearingMR105ZZ();
+}
+
+module PipeHolderMinus(w=10, bearing = 2) {
+    rotate([0,90,0])
+	translate([0,0,-bearing/3])
+        	cylinder(d = BearingMR105ZZDiameter(), h = w+bearing, center = true);
+        rotate([0,90,0])
+            Pipe32(len=w);
+        for(i=[0,120,240]) {
+            rotate([i,0,0]) 
+                translate([-1,0,(PVC_PIPE_DIAMETER()/3)])
+                    rotate([0,90,0]) translate([0,0,-(w/2)])
+                        union() {
+                            cylinder(h=10,d=THREADED_ROD_DIAMETER()+0.2, $fn =16);
+                            translate([0,0,-5])
+                            cylinder(d=8,h=10,$fn=6);
+                        }
+        }
+
 }
 
 PipeHolder();
