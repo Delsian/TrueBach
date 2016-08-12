@@ -41,9 +41,9 @@ module PipeHolderMinus(w=10, bearing = 2) {
                 translate([-1,0,(PVC_PIPE_DIAMETER()/3)])
                     rotate([0,90,0]) translate([0,0,-(w/2)])
                         union() {
-                            cylinder(h=10,d=THREADED_ROD_DIAMETER()+0.2, $fn =16);
+                            cylinder(h=w*2,d=THREADED_ROD_DIAMETER()+0.2, $fn =16);
                             translate([0,0,-5])
-                            cylinder(d=8,h=10,$fn=6);
+                            	cylinder(d=8,h=10,$fn=6);
                         }
         }
 

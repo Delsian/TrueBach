@@ -19,27 +19,33 @@ MountScrews = 3;
 MountNutDia = 6.4;
 
 module MiddleCase() {
-	MiddleCaseBottom();
-	//MiddleCaseTop();
+    union() {
+        color("Yellow") MiddleCaseBottom();
+        //color("Blue") MiddleCaseTop();
+    }
 }
 
 module MiddleCaseTop() {
 	difference() {
 		MiddleCaseBody();
-		MiddleCaseBottom();
+		BodyCut();
 	}
 }
 
 module MiddleCaseBottom() {
 	intersection() {
 		MiddleCaseBody();
-        union() {
-            translate([-MiddleCaseWidth,-MiddleCaseLength*1.5,-(MiddleCaseHeight/2)-10])
-			cube([MiddleCaseWidth*2,MiddleCaseLength*2,(MiddleCaseHeight/2)+10]);
-            translate([-5,-20,-8])
-            cube([MiddleCaseWidth*2,50,MiddleCaseHeight*0.5]);
-        }
+        BodyCut();
 	}
+}
+
+module BodyCut() {
+    union() {
+        translate([-MiddleCaseWidth,-MiddleCaseLength*1.5,-(MiddleCaseHeight/2)-10])
+            cube([MiddleCaseWidth*2,MiddleCaseLength*2,(MiddleCaseHeight/2)+10]);
+        translate([-5,-20,-8])
+            cube([MiddleCaseWidth*2,50,MiddleCaseHeight*0.5]);
+    }
 }
 
 module MiddleCaseBody() {
@@ -72,6 +78,8 @@ module MiddleCaseBody() {
                             cube([20,40,100]);
                     }
                 } // -Bearings base
+                // Gear stand
+                GearBearing();
             }
             // mount holes
             translate([-11,-10,-20])
@@ -91,9 +99,38 @@ module MiddleCaseBody() {
             }
             // Pipe holder
             translate([-8,2,25])
-            PipeHolderMinus(w=20,bearing=80);
+                PipeHolderMinus(w=20,bearing=75);
+            // main bearing bolt
+            translate ([-MiddleCaseWidth/2,-MiddleCaseLength*0.55,-MiddleCaseHeight*0.5])
+                cylinder(d=MountScrews*1.2,h=MiddleCaseHeight*2, $fn=16);
+            translate ([-MiddleCaseWidth/2,-MiddleCaseLength*0.55,-8])
+                cylinder(d=MountNutDia,h=4,$fn=6);
+
         }
     }
+}
+
+module GearBearing() {
+    intersection() {
+    minkowski() {
+        sphere(MiddleCaseWallTickness*2);
+        MiddleCaseBodyBase();
+    }
+    translate ([-MiddleCaseWidth/2,-MiddleCaseLength*0.55,0])
+        difference() {
+            union() {
+                cylinder(d=20,h=MiddleCaseHeight*2);
+                StiffeningRib();
+                translate([0,0,50]) StiffeningRib();
+            }
+            cylinder(d=MountScrews*1.2,h=MiddleCaseHeight*2);
+        }
+    }
+}
+
+module StiffeningRib() {
+    rotate([0,90,45]) cylinder(d=10,h=70);
+    rotate([180,90,-45]) cylinder(d=10,h=70);
 }
 
 module MiddleCaseBodyBase() {
@@ -126,5 +163,5 @@ module pipe_cut() {
     }
 }
 
-%MiddleCase();
-GearsMiddleSet();
+MiddleCase();
+//GearsMiddleSet();
