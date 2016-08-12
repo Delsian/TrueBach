@@ -43,7 +43,7 @@ module ArmFar() {
 
 // Far end of first arm
 module near_arm_mount_far() {
-    holder_w = 70;
+    holder_w = 50;
     holder_h = 40;
 	PipeHolder(h=holder_h,w=holder_w);
 }
@@ -59,6 +59,6 @@ module near_arm_mount_near() {
     }
 }
 
-translate([-60,0,0]) GearsMiddleSet();
-ArmNear();
+//translate([-60,0,0]) GearsMiddleSet();
+//ArmNear();
 //near_arm_mount_near();
