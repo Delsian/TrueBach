@@ -19,17 +19,17 @@ MountScrews = 3;
 MountNutDia = 6.4;
 
 module MiddleCase() {
-    union() {
-        color("Yellow") MiddleCaseBottom();
-        //color("Blue") MiddleCaseTop();
-    }
+    //union() {
+        %color("Yellow") MiddleCaseTop();
+        color("Blue") MiddleCaseBottom();
+    //}
 }
 
 module MiddleCaseTop() {
 	difference() {
-		MiddleCaseBody();
-		BodyCut();
-	}
+        MiddleCaseBody();
+        BodyCut();
+    }
 }
 
 module MiddleCaseBottom() {
@@ -112,19 +112,20 @@ module MiddleCaseBody() {
 
 module GearBearing() {
     intersection() {
-    minkowski() {
-        sphere(MiddleCaseWallTickness*2);
-        MiddleCaseBodyBase();
-    }
-    translate ([-MiddleCaseWidth/2,-MiddleCaseLength*0.55,0])
-        difference() {
-            union() {
-                cylinder(d=20,h=MiddleCaseHeight*2);
-                StiffeningRib();
-                translate([0,0,50]) StiffeningRib();
-            }
-            cylinder(d=MountScrews*1.2,h=MiddleCaseHeight*2);
+        minkowski() {
+            sphere(MiddleCaseWallTickness*2);
+            MiddleCaseBodyBase();
         }
+        translate ([-MiddleCaseWidth/2,-MiddleCaseLength*0.55,0])
+            difference() {
+                union() {
+                    translate ([0,0,-10])
+                        cylinder(d=20,h=MiddleCaseHeight*2);
+                    StiffeningRib();
+                    translate([0,0,50]) StiffeningRib();
+                }
+                cylinder(d=MountScrews*1.2,h=MiddleCaseHeight*2);
+            }
     }
 }
 
